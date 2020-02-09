@@ -8,6 +8,13 @@ This application takes multiple inputs in the command-line:
 * movie-this [movie]
 * do-what-it-says
 
+Thie application uses multiple packages:
+* **axios**: ^0.19.2,
+* **dotenv**: ^8.2.0,
+* **file-system**: ^2.2.2,
+* **moment**: ^2.24.0,
+* **node-spotify-api**: ^1.1.1
+
 ## Usage
 
 Command-Line Input:
