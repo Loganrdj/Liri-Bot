@@ -112,19 +112,27 @@ function runBands(user_input_array){
     var bandURL = `https://rest.bandsintown.com/artists/${tempBand}/events?app_id=codingbootcamp`
     axiosCall(bandURL);
 }
-
-if(userInput.length > 0){
-    if(userInput[0].startsWith("m")){
-        toggleAxios = "omdb";
-        runAxios(userInput);
-    } else if(userInput[0].startsWith("s")){
-        runSpotify(userInput);
-    } else if(userInput[0].startsWith("c")){
-        toggleAxios = "bands";
-        runBands(userInput);
-    } else if(userInput[0].startsWith("d")){
-        
-    } else {
-        console.log("Please enter a proper command!");
+function checkInput(user_input_array){
+    if(user_input_array.length > 0){
+        if(user_input_array[0].startsWith("m")){
+            toggleAxios = "omdb";
+            runAxios(user_input_array);
+        } else if(user_input_array[0].startsWith("s")){
+            runSpotify(user_input_array);
+        } else if(user_input_array[0].startsWith("c")){
+            toggleAxios = "bands";
+            runBands(user_input_array);
+        } else if(user_input_array[0].startsWith("d")){
+            fs.readFile("random.txt", function(error, data){
+                if(error){
+                    throw error;
+                }
+                data = data.toString().split(',');
+                checkInput(data);
+            })
+        } else {
+            console.log("Please enter a proper command!");
+        }
     }
 }
+checkInput(userInput);
