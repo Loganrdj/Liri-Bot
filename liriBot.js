@@ -11,6 +11,8 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
+var moment = require('moment');
+var fs = require('file-system');
 var spotify = new Spotify(keys.spotify);
 var toggleAxios;
 
@@ -31,16 +33,16 @@ function axiosCall(queryURL){
             console.log(queryURL);
             if(toggleAxios == "omdb"){
                 console.log("-----------------------------OMDB Call-----------------------------");
-                console.log(`\nMovie: ${response.data.Title}\nYear: ${response.data.Year}\nIMDB Rating: ${response.data.imdbRating}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry: ${response.data.Country}\nLanguage: ${response.data.Language}\nPlot: ${response.data.Plot}\nActors: ${response.data.Actors}\n`)
+                console.log(`\nMovie: ${response.data.Title}\nYear: ${response.data.Year}\nIMDB Rating: ${response.data.imdbRating}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry: ${response.data.Country}\nLanguage: ${response.data.Language}\nPlot: ${response.data.Plot}\nActors: ${moment(response.data.Actors, "MM-DD-YYYY")}\n`)
                 console.log("-------------------------------------------------------------------");
             } else if (toggleAxios == "bands"){
-                console.log("-----------------------------Bands Call-----------------------------");
+                console.log(`-----------------------------Bands Call-----------------------------`);
                 for(let i = 0; i < response.data.length; i++){
-                    console.log(`\nVenue Name: ${response.data[i].venue.name}\nVenue Location: ${response.data[i].venue.country}, ${response.data[i].venue.city}\nVenue Date: `)
+                    let date = moment(response.data[i].datetime).format("MM/DD/YYYY")
+                    console.log(`\nVenue Name: ${response.data[i].venue.name}\nVenue Location: ${response.data[i].venue.country}, ${response.data[i].venue.city}\nVenue Date: ${date}`)
                 }
                 console.log("--------------------------------------------------------------------");
             }
-            
         }, function(error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
@@ -79,14 +81,25 @@ function runSpotify(user_input_array){
     spotify.search({ 
         type: 'track', 
         query: song, 
-        limit: 1 
-    }, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
+        limit: 3
+    }).then(function(response) {
+        console.log("-----------------------------Spotify Call-----------------------------");
+        let artistArray = []
+        for(let i = 0; i < response.tracks.items.length; i++){
+            for(let j = 0; j < response.tracks.items[i].artists.length; j++){
+                if(!artistArray.includes(response.tracks.items[i].artists[j].name)){
+                    artistArray.push(response.tracks.items[i].artists[j].name);
+                }
+            }
+            console.log(`\nArtists: ${artistArray}\nSong Name: ${response.tracks.items[i].name}\nPreview URL: ${response.tracks.items[i].preview_url}\nAlbum Name: ${response.tracks.items[i].album.name}`)
         }
-    console.log(data); 
+        console.log("---------------------------------------------------------------------");
+        
+      }).catch(function(err) {
+        console.log(err);
     });
 }
+
 function runBands(user_input_array){
     let band = [];            
     if(user_input_array.length > 1){
