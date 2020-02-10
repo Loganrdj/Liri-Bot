@@ -29,8 +29,8 @@ if(process.argv.length > 2){
 function axiosCall(queryURL){
     axios.get(queryURL).then(
         function(response) {
-            console.log(response.data);
-            console.log(queryURL);
+            // console.log(response.data);
+            // console.log(queryURL);
             if(toggleAxios == "omdb"){
                 console.log("-----------------------------OMDB Call-----------------------------");
                 console.log(`\nMovie: ${response.data.Title}\nYear: ${response.data.Year}\nIMDB Rating: ${response.data.imdbRating}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry: ${response.data.Country}\nLanguage: ${response.data.Language}\nPlot: ${response.data.Plot}\nActors: ${moment(response.data.Actors, "MM-DD-YYYY")}\n`)
