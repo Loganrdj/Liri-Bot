@@ -1,3 +1,5 @@
+![](/HW-liriBot.gif)
+
 # Liri-Bot
 
 ### Overview
